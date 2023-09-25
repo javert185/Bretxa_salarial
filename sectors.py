@@ -1,5 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+from scipy import stats
 
 # Carreguem l'arxiu de dades des del fitxer CSV
 data = pd.read_csv("brecha_salarial_europa.csv")
@@ -66,6 +67,28 @@ plt.savefig(save_path_taules)
 
 # Opcionalment, obre la imatge desada amb un visualitzador d'imatges
 subprocess.Popen([save_path_taules], shell=True)
+
+# Realitza l'anàlisi de regressió per al sector "water supply"
+aigua = sp[sectors[5]].tolist()
+fig, ax = plt.subplots()
+ax.scatter(anys, aigua)
+stats_result = stats.linregress(anys, aigua)
+ax.plot(anys, anys * stats_result[0] + stats_result[1])
+ax.set_title("Regressió lineal del sector " + str(sectors[5]))
+print("El pendent és ", stats_result[0], "per hi ha un descens significatiu de la bretxa salarial al llarg dels anys")
+print("El punt d'intersecció és ", stats_result[1], "que marca quan la línia creurà l'eix x, per tant a partir de 2022 no hauria d'haver bretxa salarial")
+print("El coeficient de Pearson és", stats_result[2], "és força proper a -1, per tant hi ha una correlació negativa gairebé perfecta entre els valors de la bretxa i els anys")
+print("El p-value és", stats_result[3], " i per obtenir rellevància estadística hauria de ser menor que 0.05. Potser afecta que la mostra feta servir és més aviat reduïda")
+print("Ha estat un bon fitting, ja que visualment la línia i els punts es mostren propers. Seria un mal fitting si la línia estigues molt allunyada dels punts (underfitting) o els recorregués exactament (overfitting)")
+
+# Especifica la ruta completa per desar el gràfic del sector "water supply"
+save_path_water_supply = r"C:\Users\sergi\Documents\IT Academy projects\Python\water_supply.png"
+
+# Desa el gràfic del sector "water supply" a la ruta especificada
+plt.savefig(save_path_water_supply)
+
+# Opcionalment, obre la imatge desada amb un visualitzador d'imatges
+subprocess.Popen([save_path_water_supply], shell=True)
 
 # Mostra el gràfic (si és necessari)
 # plt.show()
